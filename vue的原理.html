@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+</head>
+
+<body>
+    <div id="app">
+        <p class="abc-p"> </p>
+
+        <button id="btn">++</button>
+    </div>
+    <script src="../lib/vue.js"></script>
+    <script>
+
+        // let vm = new Vue({
+        //     el: '#app',
+        //     data: {
+        //         message: 'hello vue.js',
+        //         num: 0
+        //     }
+        // })
+        //为什么数据变化的时候,viewmodel就能得知
+        //为什么viewport得知数据变化后,视图就会马上更新
+        //为什么当视图接受到指令的时候,viewport马上就能得知
+
+        //vue中使用了一个叫object.defineproperty的ES5的api  
+
+        function Abc(options) {
+            this.$el = document.querySelector(options.el)
+
+            //如果我们要这么搞的话,在外面去更改数据的时候,vm根本无法得知
+            this.data = options.data
+
+            //这个watcher专门监听数据的变化
+            this.watcher = {};
+
+            //为每个watcher添加对应的每一个数据的watcher
+            this.createWatcher();
+
+            this.$data = {};
+
+            //为$data上去挂载这些属性,并添加getter 和 setter 
+            this.defineProperty();
+
+            this.p = document.querySelector('.abc-p');
+            this.p.innerHTML = this.data.num;
+
+            console.log(this.data);
+            //num: 0
+
+            console.log(this.$data);
+            //num: (...)
+            // get num: () => {…}
+            // set num: (val)=> {…}
+
+
+        }
+
+        Abc.prototype = {
+            constructor: Abc,
+            createWatcher() {
+                for (const key in this.data) {
+                    this.watcher[key] = (val) => {
+                        // console.log(val);下面defineProperty里面的的set中有一个方法.看一下就知道了 如果传进来就有val,如果不传,其实这里有没有val都一样
+
+                        //更新视图
+                        this.p.innerHTML = this.$data.num;
+                    }
+                }
+            },
+            defineProperty() {
+                //为了给实例挂载data属性,这样的话我们才能在外面通过vm.data.去进行数据的更改
+                for (const key in this.data) {
+                    Object.defineProperty(this.$data, key, {
+                        //这里不能用es6的快捷方法,因为要用到this.必须用箭头函数
+                        get: () => {
+                            //this.data是对象,对象可以通过方括号[] + 变量名 获取变量值
+                            return this.data[key]
+                        },
+                        set: (val)=>{
+                            console.log('数据更改了');
+                            this.data[key] = val;
+                            //执行watcher的代码
+                            this.watcher[key]()
+                        }
+                    })
+                }
+            }
+        }
+
+        let vm = new Abc({
+            el: '#app',
+            data: {
+                num: 0
+            }
+        })
+
+        let btn = document.querySelector('#btn');
+        btn.onclick = function () {
+            vm.$data.num++;//外面要用里面的data要加$
+        }
+
+
+        // Object.defineproperty可以给一个对象添加一个属性，并且这个属性就拥有了对应的getter和setter，当我们使用这个属性的时候，对应的getter就会执行，更改这个属性的时候，对应的setter就会执行
+        //现在想给obj添加属性，但是我们不去直接添加，而是利用Object.defineProperty去添加，这样的话我们就可以监控数据更改的过程了
+        // var obj = {  }
+        // var _obj = { num: 5 }
+        // Object.defineProperty(obj, 'num', {
+        //     get () {//getter 使用属性值的时候会触发
+        //         //getter返回什么，属性的值就是什么
+        //         return _obj.num
+        //     },
+        //     set (val) {//setter
+        //         console.log('hehehehehe')
+        //         //当数据更改的时候，我们就可以在这里做一些操作了
+        //         _obj.num = val
+        //     }
+        // })
+        // obj.num = 6
+        // console.log(obj.num)//5
+        
+
+
+        //Vue中实例的数据都是用Object.defineProperty处理过的，每一个数据都拥有自己的getter和setter，当我们更改数据的时候，数据对应的setter就会执行，实例中属性所对应的watcher就会马上去通知视图进行更新
+
+    </script>
+</body>
+
+</html>
