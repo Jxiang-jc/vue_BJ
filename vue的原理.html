@@ -76,7 +76,7 @@
             },
             defineProperty() {
                 //为了给实例挂载data属性,这样的话我们才能在外面通过vm.data.去进行数据的更改
-                for (const key in this.data) {
+                // for (const key in this.data) {
                     Object.defineProperty(this.$data, key, {
                         //这里不能用es6的快捷方法,因为要用到this.必须用箭头函数
                         get: () => {
@@ -90,7 +90,7 @@
                             this.watcher[key]()
                         }
                     })
-                }
+                // }
             }
         }
 
