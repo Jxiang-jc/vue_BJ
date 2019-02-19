@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./swiper.min.css">
+    <script src="./swiper.min.js"></script>
+    <script src="./base/vue.min.js"></script>
+</head>
+<style>
+   body{
+       margin: 0;
+   } 
+</style>
+<body>
+
+    <div id="app">
+        <app-banner></app-banner>
+    </div>
+    
+    <template id="app-banner">
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div v-for = "banner in banners" :key="banner.id" class="swiper-slide">
+                    <img width="100%" :src="banner.image" alt="">
+                </div>               
+            </div>
+            <div class="swiper-pagination"></div>
+            {{num}} <button @click="num++">++</button>
+        </div>
+    </template>
+
+    <script src="https://cdn.bootcss.com/vue-resource/1.5.0/vue-resource.min.js"></script>
+    <script>   
+        Vue.component('app-banner', {
+            template: '#app-banner',
+            data () {
+                return {
+                    banners: [],
+                    num: 0
+                }
+            },
+            methods: {
+                getBanners () {
+                    this.$http.get('./banners.json').then(res => {
+                        console.log(res)
+                        //更改数据
+                        this.banners = res.data.bannerList
+                        //回调函数会在上一次数据改变所引起的dom更新完成后触发
+                        Vue.nextTick(() => {
+                            new Swiper('.swiper-container', {
+                                pagination: { el: '.swiper-pagination' }
+                            })
+                        })
+                        
+                    })
+                }
+            },
+            // created/beforeMount里大部分情况下会做初始数据的获取
+            created () {
+                this.getBanners()
+            },
+            mounted () {
+                //如果在这里实例化swiper，因为数据是异步获取的，请求需要时间，所以在此时还没有数据，页面中还没有图片，所以实例化失败
+                // new Swiper('.swiper-container', {
+                //     pagination: { el: '.swiper-pagination' }
+                // })
+            },
+            watch: {
+                banners () {
+                    console.log('数据变化了')
+                    //数据刚刚变化，dom还没来得及更新
+                    // new Swiper('.swiper-container', {
+                    //     pagination: { el: '.swiper-pagination' }
+                    // })
+                }
+            },
+            updated () {
+                //任意数据变化都会触发,所以要防止无关数据的影响
+                // if ( !this.swiper ) {
+                //     this.swiper = new Swiper('.swiper-container', {
+                //         pagination: { el: '.swiper-pagination' }
+                //     })
+                // }        
+            }
+        })
+
+        new Vue({
+            el: '#app'
+        })
+        //个人总结：在初始化阶段（mounted之前），程序是同步执行的，异步请求的数据是需要时间的，此时挂载的数据为空，dom渲染的内容也为空。等到数据请求回来，update开始执行
+    </script>
+</body>
+</html>
+
+比方说,我这里用的是swiper嘛,然后我是在created的钩子函数里面获取数据.然后呢.因为它官网其实并没有解释在哪个地方new这个swiper的实例出来.
+所以我,一开始是在mounted里面是实例化的.当然这肯定是无法得到我想要的结果.因为获取数据是异步的,请求需要时间.所以实例化失败了,然后我又用了updated,
+效果是出来了.但是.因为updatad的话,只要是数据发生变化了.它就会触发.也就是会不断触发实例化这个过程.因此还需要有一个判断.但这里面还有一个问题.就是如果我有多个轮播图的时候,那我就得在updated写多几次.这样代码就会很多,然后,我就纠结了.我在vue官方文档上找到了nextTick.emm.nextTick的话呢,有一个回调函数的,回调函数会在上一次数据改变所引起的dom更新完成后触发,这样的话,我们就可以在数据获取后,再实例化它.就可以达到我们想要的效果了
