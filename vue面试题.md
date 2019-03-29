@@ -1,0 +1,136 @@
+<h2>目录</h2>
+
+&emsp;[1. 说一下Vue的双向数据绑定原理](#k1)
+
+&emsp;[2. 解释单向数据流和双向数据绑定](#k2)
+
+<h5 id='k1'>1. 说一下Vue的双向数据绑定原理</h5>
+
+> `vue`实现数据双向绑定主要是： 采用数据劫持结合发布者-订阅者模式的方式。 通过`Object.defineProperty()` 来劫持各个属性的 `setter`, `getter`, 在数据变动时发布消息给订阅者， 触发相应监听回调  
+`Object.defineProperty(obj, prop, descriptor)`  
+obj: 要在其上定义属性的对象。  
+prop: 要定义或修改的属性的名称。  
+descriptor: 将被定义或修改的属性描述符。
+
+<h5 id='k2'>2.解释单向数据流和双向数据绑定</h5>
+
+> 单向数据流： 顾名思义， 数据流是单向的。 数据流动方向可以跟踪， 流动单一， 追查问题的时候可以更加快捷， 缺点就是写起来不太方便， 要使UI发生变更就必须创建各种 `action`为维护对应的 `state`
+
+> 双向数据绑定： 数据之间是想通的， 将数据变更的操作隐藏在框架内部。 优点是在表单交互较多的场景下， 会简化大量业务无关的代码。 缺点是无法追踪局部状态的变化， 增加了出错时 `debug`的难度
+
+<h5 id='k3'>3.如何去除url中的 #</h5>
+
+```js
+new Router({
+  mode: 'history',
+  routes: [ ]
+})
+```
+
+> 需要注意的是， 当我们启用 `history`模式的时候， 由于我们项目是一个单页面应用， 所以在路由跳转的时候， 就会出现访问不到静态资源而出现 `404`的情况， 这时候就需要服务端增加一个覆盖所有情况的候选资源： 如果`URL`匹配不到任何静态资源， 则应该返回同一个 `index.html` 页面
+
+<h5 id='k4'>4. 对MVC、MVVM的理解</h5>
+
+![image](https://raw.githubusercontent.com/ltadpoles/web-document/master/Other/images/mvc.png)
+
+特点： 
+1. `View`传送指令到 `Controller`
+2. `Controll`完成业务逻辑后， 要求`Model`改变状态
+3. `Model`将新的数据发送到`View`, 用户得到反馈
+
+**所有通信都是单向的**
+
+> MVVM
+
+![image](https://raw.githubusercontent.com/ltadpoles/web-document/master/Other/images/mvvm.png)
+
+特点： 
+1. 各部分之间的通信， 都是双向的
+2. 采用双向绑定， `View`的变动， 自动反应在 `ViewModel`, 反之亦然
+
+具体请移步 [这里](http://www.ruanyifeng.com/blog/2015/02/mvcmvp_mvvm.html)
+
+<h5 id=k5'>5. 介绍虚拟DOM</h5>
+
+[参考这里](https://www.jianshu.com/p/616999666920)
+
+<h5 id='k6'>6. vue生命周期的理解</h5>
+
+> vue实力有一个完整的生命周期， 生命周期也就是指一个实例从开始创建到销毁的整个过程
+
+- `beforCreated()` 在实例创建之间执行， 数据未加载状态
+- `created()` 在实例创建、数据加载后， 能初始化数据， `dom`渲染之前执行
+- `beforeMount()` 虚拟`dom`已经完成， 在数据渲染前最后一次更改数据
+- `mounted()` 页面、数据渲染完成， 真是`dom`挂在完成
+- `beforeUpdate()` 重新渲染之前触发
+- `updated()` 数据已经更改完成， `dom`也重新`render`完成， 更改数据会陷入死循环
+- `beforeDestory()` 和 `destoryed()` 前者是销毁前执行（实例仍然完全可用）， 后者是销毁后执行
+
+<h5 id='k7'>7. 组件通信</h5>
+
+> 父组件向子组件通信
+
+子组件通过props属性， 绑定父组件数据， 实现双方通信
+
+> 子组件向父组件通信
+
+将父组件的自定义事件在子组件中通过`$emit`触发
+
+> 非父子组件、兄弟组件之间的数据传递
+
+```js
+/* 新建一个Vue实例作为中央事件总嫌 */
+let event = new Vue()
+
+/* 监听事件 */
+event.$on('eventName', (val) => {
+  // ...do something
+})
+
+/* 触发事件 */
+event.$emit('eventName', 'this is a message.')
+```
+
+> Vuex数据管理
+
+<h5 id='k8'>8. vue-router 路由实现</h5>
+
+> 路由就是用来跟后端服务器进行交互的一种方式， 通过不同的路径， 来请求不同的资源， 请求不同的页面是路由的其中一种功能
+
+参考 [这里](https://zhuanlan.zhihu.com/p/37730038)
+
+<h5 id='k9'>9. v-if 和 v-show区别</h5>
+
+> 使用了 `v-if`的时候， 如果值为`false`, 那么页面将不会有这个`html`标签生成。
+
+> `v-show` 则是不管值为`true`还是`false`， `html` 元素都会存在，只是`css`中的`display`显示或隐藏
+
+<h5 id='k10'>10. $route和$router的区别</h5>
+
+> `$router` 为 `VueRouter` 实例， 想要导航到不同的 `URL`， 则使用 `$router.push` 方法
+
+> `$route` 为当前 `router` 跳转对象里面可以获取 `name`、 `path`、 `query` 、 `params` 等
+
+<h5 id='k11'>11. NextTick是做什么的</h5>
+
+> `$nextTick` 是在下次 `DOM` 更新循环结束之后执行延迟回调， 在修改数据之后使用 `$nextTick`， 则可以在回调中获取更新后的 `DOM`
+
+具体可参考官方文档 [深入响应式原理](https://cn.vuejs.org/v2/guide/reactivity.html)
+
+<h5 id='k12'>12. Vue 组件 data 为什么必须是函数</h5>
+
+> 因为js本身的特性带来的， 如果 `data`是一个对象， 那么由于对象本身属于引用类型, 当我们修改其中一个属性时, 回影响到所有Vue实例的数据, 如果将 `data` 作为一个函数返回一个对象, 那么每一个实例的 `data` 属性都是独立的, 就不会互相影响了
+
+<h5 id='k13'>13. 计算属性computed 和事件 methods 和 监听 watch 有什么区别</h5>
+
+我们可以将同一函数定义为一个 `method` 或者一个计算属性。对于最终的结果，两种方式是相同的
+
+不同点:
+
+> `computed`: 根据一条现有数据，去生成新数据，并且建立联系，当现有数据变化之后，新数据也会变化，计算属性是基于它们的依赖进行缓存的, 当其他数据变化的时候，直接设置为缓存里的值, 只有在它的相关依赖发生改变时才会重新求值
+
+> 对于 `methods`, 在`methods`中定义方法，方法去返回想要的变化的数据，在视图表达式中使用函数就可以了, 但是, 这这样的话，当其他数据变化的时候，`vue`会重新编译模板，`methods`的方法域就会被重新执行
+
+> 对于 `watch`: `watch` 在做这样的事情的时候, 需要先去定义新数据, 再去监听更改新数据, 其实`watch`跟时候做监听数变化后去执行某些操作
+
+<h5 id='k14'>14. 对比jQuery, Vue有什么不同</h5>
