@@ -134,3 +134,96 @@ event.$emit('eventName', 'this is a message.')
 > 对于 `watch`: `watch` 在做这样的事情的时候, 需要先去定义新数据, 再去监听更改新数据, 其实`watch`跟时候做监听数变化后去执行某些操作
 
 <h5 id='k14'>14. 对比jQuery, Vue有什么不同</h5>
+
+> `jQuery` 专注视图层, 通过操作`DOM`去实现页面的一些逻辑渲染, `Vue` 专注于数据层, 通过数据的双向绑定, 最终表现在 `DOM` 层面, 减少 `DOM` 操作
+
+> `Vue` 使用了组件化思想, 使得项目子集职责清晰, 提高了开发效率, 方便重复利用, 便于协同开发
+
+<h5 id='k15'>15. Vue 中怎么自定义指令</h5>
+
+> 全局注册
+
+```js
+// 注册一个全局自定义指令 `v-focus`
+Vue.directive('focus', {
+  // 当被绑定的元素插入到DOM中时...
+  inserted: function (el) {
+    // 聚焦元素
+    el.focus()
+  }
+})
+```
+
+> 局部注册
+
+```js
+directives: {
+  focus: {
+    // 指令的定义
+    inserted: function (el) {
+      el.focus()
+    }
+  }
+}
+```
+
+参考 [官方文档-自定义指令](https://cn.vuejs.org/v2/guide/custom-directive.html)
+
+<h5 id='k16'>16. Vue 中怎么自定义过滤器</h5>
+
+> 可以用全局方法 `Vue.filter()` 注册一个自定义过滤器. 它接收两个参数, 过滤器 `ID` 和过滤器函数. 过滤器函数以值为参数, 返回转换后的值
+
+```js
+Vue.filter('reverse', function (value) {
+  return value.split('').reverse().join('')
+})
+```
+
+```html
+<!-- 'abc' => 'cba' -->
+<span v-text='message | reverse'></span>
+```
+
+过滤器也同样接受全局注册和局部注册
+
+<h5 id='k17'>17. 对 keep-alive 的了解</h5>
+
+> `keep-alive` 是 `Vue` 内置的一个组件, 可以使被包含的组件保留状态, 或避免重新渲染
+
+```html
+<keep-alive>
+  <component>
+    <!-- 该组件将被缓存 -->
+  </component>
+</keep-alive>
+```
+
+> 可以使用API提供的props, 实现组件的动态缓存
+
+具体参考 [官方API](https://cn.vuejs.org/v2/api/#keep-alive)
+
+<h5 id='k18'>18. Vue 中 key 的作用</h5>
+
+> `key` 的特殊属性主要用在 `Vue` 的虚拟 `DOM` 算法, 在新旧 `nodes` 对比时辨识 `VNodes` . 如果不使用 `key` , `Vue` 会使用一种最大限度减少动态元素并且尽可能尝试修复/再利用相同类型元素的算法, 使用 `key`, 它会基于 `key` 的变化重新排列元素顺序, 并且会移除 `key` 不存在的元素.
+
+> 有相同父元素的子元素必须有独特的 `key`, 重复的 `key` 会造成渲染错误
+
+具体参考 [官方API](https://cn.vuejs.org/v2/api/#key)
+
+<h5 id='k19'>19. Vue 的核心是什么</h5>
+
+> 数据驱动 组件通信
+
+<h5 id='k20'>20. vue 等单页面应用的优缺点</h5>
+
+> 优点:
+
+- 良好的交互体验
+- 良好的前后端工作分离模式
+- 减轻服务器压力
+
+> 缺点:
+
+- SEO难度较高
+- 前进、后退管理
+- 初次加载耗时多
