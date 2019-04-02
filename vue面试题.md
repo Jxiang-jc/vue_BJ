@@ -1,8 +1,44 @@
 <h2>目录</h2>
 
-&emsp;[1. 说一下Vue的双向数据绑定原理](#k1)
+&emsp;[1. 说一下Vue的双向绑定数据的原理](#k1)
 
 &emsp;[2. 解释单向数据流和双向数据绑定](#k2)
+
+&emsp;[3. Vue如何去除url中的 #](#k3)
+
+&emsp;[4. 对 MVC、MVVM的理解](#k4)
+
+&emsp;[5. 介绍虚拟DOM](#k5)
+
+&emsp;[6. vue生命周期的理解](#k6)
+
+&emsp;[7. 组件通信](#k7)
+
+&emsp;[8. 路由实现](#k8)
+
+&emsp;[9. v-if 和 v-show 区别](#k9)
+
+&emsp;[10. $route和$router的区别](#k10)
+
+&emsp;[11. NextTick 是做什么的](#k11)
+
+&emsp;[12. Vue 组件 data 为什么必须是函数](#k12)
+
+&emsp;[13. 计算属性computed 和事件 methods 和 watch 有什么区别](#k13)
+
+&emsp;[14. 对比 jQuery ，Vue 有什么优缺点](#k14)
+
+&emsp;[15. Vue 中怎么自定义指令](#k15)
+
+&emsp;[16. Vue 中怎么自定义过滤器](#k16)
+
+&emsp;[17. 对 keep-alive 的了解](#k17)
+
+&emsp;[18. Vue 中 key 的作用](#k18)
+
+&emsp;[19. 你觉得 Vue 的核心是什么](#k19)
+
+&emsp;[20. vue 等单页面应用的优缺点](#k20)
 
 <h5 id='k1'>1. 说一下Vue的双向数据绑定原理</h5>
 
