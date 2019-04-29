@@ -43,6 +43,17 @@
   left: 0;
   right: 0;
 }
+.close {
+  position: relative;
+}
+.close_tab {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 10px;
+  height: 10px;
+
+}
 .tabs-content {
   padding: 8px 0;
 }

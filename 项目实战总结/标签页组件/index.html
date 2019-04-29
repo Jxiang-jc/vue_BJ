@@ -11,14 +11,14 @@
     <tabs v-model="activeKey">
       <!-- 自定义组件实现双向数据绑定 v-model需要满足以下两点 -->
       <!-- 1. 接收一个value属性 -->
-      <!-- 2. 在又新的value时触发input事件 -->
-      <pane label="标签一" name="1" value="jx">
+      <!-- 2. 在新有的value时触发input事件 -->
+      <pane label="标签一" name="1" :closable="closable">
         标签一的内容
       </pane>
-      <pane label="标签二" name="2" value="jp">
+      <pane label="标签二" name="2" :closable="!closable">
         标签二的内容
       </pane>
-      <pane label="标签三" name="3" value="yt">
+      <pane label="标签三" name="3" :closable="closable">
         标签三的内容
       </pane>
     </tabs>
@@ -31,7 +31,8 @@
       el: '#app',
       data () {
         return {
-          activeKey: '1'
+          activeKey: '2',
+          closable: true
         }
       }
     })

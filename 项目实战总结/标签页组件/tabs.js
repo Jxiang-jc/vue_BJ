@@ -7,10 +7,12 @@ Vue.component('tabs', {
         <!-- 标签页标题， 这里要用v-for --> \
         <div \
           :class="tabCls(item)" \
+          class="close"
           v-for="(item, index) in navList" \
           @click="handleChange(index)" \
         > \
           {{ item.label }} \
+          <span class="close_tab" v-show="item.closable" @click.stop="closeTab(item)">x</span>
         </div> \
       </div> \
       <div class="tabs-content"> \
@@ -42,9 +44,17 @@ Vue.component('tabs', {
         }
       ]
     },
+    // 关闭pane
+    closeTab (item) {
+      console.log('item', item)
+      this.navList = this.navList.filter(pane => {
+				console.log("TCL: closeTab -> pane", pane)
+        
+        return pane.name !== item.name
+      })
+    },
     // 点击tab标签时触发
     handleChange (index) {
-      console.log('this.navList', this.navList)
       var nav = this.navList[index]
       var name = nav.name
       // 改变当前选中的tab， 并触发下面的watch
@@ -67,7 +77,8 @@ Vue.component('tabs', {
       this.getTabs().forEach( function (pane, index) {
         _this.navList.push({
           label: pane.label,
-          name: pane.name || index
+          name: pane.name || index,
+          closable: pane.closable // 是否可以关闭
         })
 
         // 如果没有给pane设置name， 默认设置它的索引
@@ -81,7 +92,6 @@ Vue.component('tabs', {
         }
       })
 
-
       this.updateStatus()
     },
     updateStatus () {
@@ -92,6 +102,7 @@ Vue.component('tabs', {
       tabs.forEach(function (tab) {
         return tab.show = tab.name === _this.currentValue
       })
+
     }
   },
   watch: {
