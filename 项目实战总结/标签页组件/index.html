@@ -1,0 +1,43 @@
+<!-- 入口页 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="./style.css">
+  <title>标签页组件</title>
+  <div id="app" v-cloak>
+    <tabs v-model="activeKey">
+      <!-- 自定义组件实现双向数据绑定 v-model需要满足以下两点 -->
+      <!-- 1. 接收一个value属性 -->
+      <!-- 2. 在又新的value时触发input事件 -->
+      <pane label="标签一" name="1" value="jx">
+        标签一的内容
+      </pane>
+      <pane label="标签二" name="2" value="jp">
+        标签二的内容
+      </pane>
+      <pane label="标签三" name="3" value="yt">
+        标签三的内容
+      </pane>
+    </tabs>
+  </div>
+  <script src="https://cdn.bootcss.com/vue/2.5.18/vue.js"></script>
+  <script src="./tabs.js"></script>
+  <script src="./pane.js"></script>
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data () {
+        return {
+          activeKey: '1'
+        }
+      }
+    })
+  </script>
+</head>
+<body>
+  
+</body>
+</html>
