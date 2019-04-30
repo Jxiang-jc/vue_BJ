@@ -12,7 +12,7 @@ Vue.component('tabs', {
           @click="handleChange(index)" \
         > \
           {{ item.label }} \
-          <span class="close_tab" v-show="item.closable" @click.stop="closeTab(item)">x</span>
+          <span class="close_tab" v-show="item.closable" @click.stop="closeTab(index)">x</span>
         </div> \
       </div> \
       <div class="tabs-content" :class="content_classes" \
@@ -51,13 +51,26 @@ Vue.component('tabs', {
       ]
     },
     // 关闭pane
-    closeTab (item) {
-      console.log('item', item)
-      this.navList = this.navList.filter(pane => {
-				console.log("TCL: closeTab -> pane", pane)
-        
-        return pane.name !== item.name
-      })
+    closeTab (index) {
+      // 获取所有的子组件
+      let arr = this.$refs.panes.children
+			arr[index].parentNode.removeChild(arr[index])
+      
+      const tabs = this.getTabs()
+      const tab = tabs[index]
+      tab.$destroy() // 完全销毁一个实例。清理它与其它实例的连接，解绑它的全部指令及事件监听器。 // 但不会清楚dom节点
+
+      // 保持当前高亮
+      if (tab.currentName === this.currentValue) {
+        // $destroy以后， 子组件会销毁一个。需要重新获取currentValue
+        const newTabs = this.getTabs()
+        let activeKey = -1
+        if (newTabs.length) {
+          activeKey = newTabs[0].currentName
+        }
+        this.currentValue = activeKey
+      }
+      
     },
     // 点击tab标签时触发
     handleChange (index) {
@@ -77,7 +90,7 @@ Vue.component('tabs', {
       })
     },
     getTabsIdx (name) {
-      return this.navList.findIndex(nav => nav.name === name);
+      return this.navList.findIndex(nav => nav.name === name)
     },
     updateNav () {
       this.navList = []
@@ -105,10 +118,11 @@ Vue.component('tabs', {
     },
     updateStatus () {
       var tabs = this.getTabs()
-			console.log("TCL: updateStatus -> tabs", tabs)
+			// console.log("TCL: updateStatus -> tabs", tabs)
       var _this = this
       // 显示当前选中的tab对应的pane组件，隐藏没有选中的
       tabs.forEach(function (tab) {
+        // var a = false || true // a -> true
         return tab.show = (tab.name === _this.currentValue) || _this.animated
       })
 

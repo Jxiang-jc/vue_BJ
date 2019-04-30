@@ -29,7 +29,6 @@ Vue.component('pane', {
   methods: {
     updateNav () {
       this.$parent.updateNav()
-      console.log('this.$parent', this.$parent)
     }
   },
   watch: {
@@ -51,5 +50,8 @@ Vue.component('pane', {
         visibility: this.$parent.currentValue !== this.currentName ? 'hidden' : 'visible'
       }
     }
+  },
+  destroyed () {
+    this.updateNav()
   }
 })
