@@ -15,7 +15,9 @@ Vue.component('tabs', {
           <span class="close_tab" v-show="item.closable" @click.stop="closeTab(item)">x</span>
         </div> \
       </div> \
-      <div class="tabs-content"> \
+      <div class="tabs-content" :class="content_classes" \
+        :style="contentStyle" ref="panes"\
+      > \
         <!-- 这里的 slot 就是嵌套的 pane --> \
         <slot></slot> \
       </div> \
@@ -25,6 +27,10 @@ Vue.component('tabs', {
     // 这里的value是为了可以使用v-model
     value: {
       type: [String, Number]
+    },
+    animated: {
+      type: Boolean,
+      default: true
     }
   },
   data () {
@@ -70,6 +76,9 @@ Vue.component('tabs', {
         return item.$options.name === 'pane'
       })
     },
+    getTabsIdx (name) {
+      return this.navList.findIndex(nav => nav.name === name);
+    },
     updateNav () {
       this.navList = []
       // 设置对this的引用， 在function回调里， this指向的并不是Vue实例
@@ -100,7 +109,7 @@ Vue.component('tabs', {
       var _this = this
       // 显示当前选中的tab对应的pane组件，隐藏没有选中的
       tabs.forEach(function (tab) {
-        return tab.show = tab.name === _this.currentValue
+        return tab.show = (tab.name === _this.currentValue) || _this.animated
       })
 
     }
@@ -112,6 +121,22 @@ Vue.component('tabs', {
     currentValue () {
       // 在当前选中的tab发生变化时， 跟新pane的显示状态
       this.updateStatus()
+    }
+  },
+  computed: {
+    content_classes () {
+      return {'content_animated': this.animated}
+    },
+    contentStyle () {
+      let idx = this.getTabsIdx(this.currentValue)
+      let pos = idx === 0 ? '0%' : `-${idx}00%`
+      let style = {}
+      if (idx > -1) {
+        style = {
+          transform: `translateX(${pos}) translateZ(0px)`
+        }
+      }
+      return style
     }
   }
 })

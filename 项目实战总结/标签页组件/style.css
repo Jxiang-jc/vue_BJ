@@ -1,5 +1,5 @@
 /* 样式 */
-
+*{margin: 0;padding: 0;}
 [v-cloak] {
   display: none;
 }
@@ -56,4 +56,23 @@
 }
 .tabs-content {
   padding: 8px 0;
+}
+.content_animated {
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: flex;
+  -ms-flex-direction: row;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  flex-direction: row;
+  will-change: transform;
+  -webkit-transition: -webkit-transform .3s ease-in-out;
+  transition: transform .3s ease-in-out;
+}
+.pane {
+  flex-shrink: 0;
+  width: 100%;
+  -webkit-transition: opacity .3s;
+  transition: opacity .3s;
+  opacity: 1;
 }

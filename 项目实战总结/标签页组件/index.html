@@ -7,11 +7,11 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="./style.css">
   <title>标签页组件</title>
-  <div id="app" v-cloak>
+  <div id="app" v-cloak style="width: 500px; margin:100px auto;">
     <tabs v-model="activeKey">
       <!-- 自定义组件实现双向数据绑定 v-model需要满足以下两点 -->
       <!-- 1. 接收一个value属性 -->
-      <!-- 2. 在新有的value时触发input事件 -->
+      <!-- 2. 在有新的value时触发input事件 -->
       <pane label="标签一" name="1" :closable="closable">
         标签一的内容
       </pane>
@@ -31,7 +31,7 @@
       el: '#app',
       data () {
         return {
-          activeKey: '2',
+          activeKey: '1',
           closable: true
         }
       }
