@@ -10,6 +10,19 @@
 </template>
 
 <script>
+	import $ from '../libs/util'
+	export default {
+		props: {
+			data: {
+				type: Object
+			}
+		},
+		data () {
+			return {
+				imgPath: $.imgPath
+			}
+		}
+	}
 </script>
 
 <style>
