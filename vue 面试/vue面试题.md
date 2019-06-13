@@ -40,6 +40,9 @@
 
 &emsp;[20. vue 等单页面应用的优缺点](#k20)
 
+&emsp;[21. vue中数组变异方法](#k20)
+
+
 <h5 id='k1'>1. 说一下Vue的双向数据绑定原理</h5>
 
 > `vue`实现数据双向绑定主要是： 采用数据劫持结合发布者-订阅者模式的方式。 通过`Object.defineProperty()` 来劫持各个属性的 `setter`, `getter`, 在数据变动时发布消息给订阅者， 触发相应监听回调  
@@ -263,3 +266,15 @@ Vue.filter('reverse', function (value) {
 - SEO难度较高
 - 前进、后退管理
 - 初次加载耗时多
+
+<h5 id='k21'>21. vue中数组变异方法</h5>
+
+``` js
+push()
+pop()
+shift()
+unshift()
+splice()
+sort()
+reverse()
+```
