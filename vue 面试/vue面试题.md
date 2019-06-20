@@ -40,7 +40,9 @@
 
 &emsp;[20. vue 等单页面应用的优缺点](#k20)
 
-&emsp;[21. vue中数组变异方法](#k20)
+&emsp;[21. vue中数组变异方法](#k21)
+
+&emsp;[22. 移动端开发中.ios遮罩层下方内容滚动](#k22)
 
 
 <h5 id='k1'>1. 说一下Vue的双向数据绑定原理</h5>
@@ -277,4 +279,9 @@ unshift()
 splice()
 sort()
 reverse()
+```
+
+<h5 id="k22>22. 移动端开发中.ios遮罩层下方内容滚动</h5>
+```html
+        <div @touchmove.prevent>我是遮罩层</div>
 ```
