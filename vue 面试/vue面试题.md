@@ -278,3 +278,70 @@ splice()
 sort()
 reverse()
 ```
+
+
+
+22. 路由根据开发状态懒加载
+
+- 1. 一般情况
+
+```js
+import Login from '@/views/login.vue'
+
+export default new Router({
+    routes: [{ path: '/login', name: 'denglu', component: Login }]
+})
+```
+
+
+
+> 当需要懒加载 `lazy-loading` 的时候，需要一个个把`routes` 的 `component` 改为 `()=>import('@/views/login.vue')`，甚为麻烦。
+>
+> 当项目页面越来越多之后，在开发环境之中使用 `lazy-loading` 会变得不太合适，每次更改代码触发热更新都会变得非常的慢。所以建议只在生成环境之中使用路由懒加载功能。
+
+- 2. 优化
+
+  - 根据 `Vue` 的异步组件和 `Webpack` 的代码分割功能可以轻松实现组件的懒加载
+
+```js
+const Foo = () => import('./Foo.vue')
+```
+
+> 在区分开发环境与生产环境时，可以在路由文件夹下分别新建两个文件：
+>
+>  `_import_production.js`
+
+```js
+module.exports = file => () => import('@/views/' + file + '.vue')
+```
+
+> `_import_development.js`(这种写法`vue-loader`版本至少在v13.0.0以上)
+
+```js
+modules.exports = file => require('@/views/' + file + '.vue').default
+
+// export default === export { default: a }
+// require没法应用默认属性，所以后面添加.default
+```
+
+> 在设置路由的`router/index.js`文件中
+
+```js
+const _import = require('./_import_' + process.env.NODE_ENV)
+
+export default new Router({
+    routes: [
+        {
+            path: '/login', name: 'denglu'， components: _import('login/index')
+        }
+    ]
+})
+```
+
+
+
+
+
+
+
+​	
