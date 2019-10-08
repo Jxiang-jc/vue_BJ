@@ -44,14 +44,7 @@
 
 &emsp;[22. 移动端开发中.ios遮罩层下方内容滚动](#k22)
 
-<<<<<<< HEAD
-&emsp;[23. 路由根据开发状态懒加载](#k23)
-
-&emsp;[24. 如何通过按钮控制一个或几个变量在不同状态下值的显示，不需申明多个变量](#k24)
-
-=======
 &emsp;[23. new Vue()做了什么?](#k23)
->>>>>>> 328c126d5115a76e10d73fe544ff696353fa2722
 
 &emsp;[24. newVue()做了什么](#k24)
 
@@ -62,6 +55,10 @@
 &emsp;[27. Vue-router 路由模式有几种？](#k27)
 
 &emsp;[28. 谈谈你对 keep-alive的了解？](#k28)
+
+&emsp;[29. 路由根据开发状态懒加载](#k29)
+
+&emsp;[30. 如何通过按钮控制一个或几个变量在不同状态下值的显示，不需申明多个变量](#k30)
 
 
 
@@ -297,91 +294,9 @@ reverse()
 
 ```js
   <div @touchmove.prevent>我是遮罩层</div>
-
 ```
 
-```js
-
-```
-
-<h5 id="k23" style="color:#007fff;">23. 路由根据开发状态懒加载</h5>
-
-- 1. 一般情况
-
-```js
-import Login from '@/views/login.vue'
-
-export default new Router({
-    routes: [{ path: '/login', name: 'denglu', component: Login }]
-})
-
-```
-
-
-
-> 当需要懒加载 `lazy-loading` 的时候，需要一个个把`routes` 的 `component` 改为 `()=>import('@/views/login.vue')`，甚为麻烦。
->
-> 当项目页面越来越多之后，在开发环境之中使用 `lazy-loading` 会变得不太合适，每次更改代码触发热更新都会变得非常的慢。所以建议只在生成环境之中使用路由懒加载功能。
-
-- 2. 优化
-
-  - 根据 `Vue` 的异步组件和 `Webpack` 的代码分割功能可以轻松实现组件的懒加载
-
-```js
-const Foo = () => import('./Foo.vue')
-
-```
-
-> 在区分开发环境与生产环境时，可以在路由文件夹下分别新建两个文件：
->
-> `_import_production.js`
-
-```js
-module.exports = file => () => import('@/views/' + file + '.vue')
-
-```
-
-> `_import_development.js`(这种写法`vue-loader`版本至少在v13.0.0以上)
-
-```js
-modules.exports = file => require('@/views/' + file + '.vue').default
-
-// export default === export { default: a }
-// require没法应用默认属性，所以后面添加.default
-
-```
-
-> 在设置路由的`router/index.js`文件中
-
-```js
-const _import = require('./_import_' + process.env.NODE_ENV)
-
-export default new Router({
-    routes: [
-        {
-            path: '/login', name: 'denglu'， components: _import('login/index')
-        }
-    ]
-})
-<<<<<<< HEAD
-```
-
-
-
-24. 如何通过按钮控制一个或几个变量在不同状态下值的显示，不需申明多个变量
-
-> 假如有两个变量 A = 10、B = [20, 30, 40]; 然后现在我有一个控制按钮，true时，将A、B都改为 0， false时，变回原本的数据。
-
-- 这种情况解决办法我这里提供两种，
-  - 用两个变量存放
-  - 利用vue的filter过滤器可以轻松解决上述问题。
-=======
-
-```
-
-
-
-<h5 id="k24" style="color:#007fff;">24. newVue()做了什么</h5>
+<h5 id="k24" style="color:#007fff;">24. new Vue()做了什么</h5>
 
 new关键字代表实例化一个对象, 而`Vue`实际上是一个类, 源码位置是 `/src/core/instance/index.js`
 
@@ -620,4 +535,67 @@ if (parent && !options.abstract) {
 }
 
 ```
->>>>>>> 328c126d5115a76e10d73fe544ff696353fa2722
+
+<h5 id="k29" style="color:#007fff;">29. 路由根据开发状态懒加载</h5>
+
+- 1. 一般情况
+
+```js
+import Login from '@/views/login.vue'
+
+export default new Router({
+    routes: [{ path: '/login', name: 'denglu', component: Login }]
+})
+```
+
+> 当需要懒加载 `lazy-loading` 的时候，需要一个个把`routes` 的 `component` 改为 `()=>import('@/views/login.vue')`，甚为麻烦。
+>
+> 当项目页面越来越多之后，在开发环境之中使用 `lazy-loading` 会变得不太合适，每次更改代码触发热更新都会变得非常的慢。所以建议只在生成环境之中使用路由懒加载功能。
+
+- 2. 优化
+
+  - 根据 `Vue` 的异步组件和 `Webpack` 的代码分割功能可以轻松实现组件的懒加载
+
+```js
+const Foo = () => import('./Foo.vue')
+```
+
+> 在区分开发环境与生产环境时，可以在路由文件夹下分别新建两个文件：
+>
+> `_import_production.js`
+
+```js
+module.exports = file => () => import('@/views/' + file + '.vue')
+```
+
+> `_import_development.js`(这种写法`vue-loader`版本至少在v13.0.0以上)
+
+```js
+modules.exports = file => require('@/views/' + file + '.vue').default
+
+// export default === export { default: a }
+// require没法应用默认属性，所以后面添加.default
+```
+
+> 在设置路由的`router/index.js`文件中
+
+```js
+const _import = require('./_import_' + process.env.NODE_ENV)
+
+export default new Router({
+    routes: [
+        {
+            path: '/login', name: 'denglu'， components: _import('login/index')
+        }
+    ]
+})
+```
+
+
+<h5 id="k30" style="color:#007fff;">30. 如何通过按钮控制一个或几个变量在不同状态下值的显示，不需申明多个变量</h5>
+
+> 假如有两个变量 A = 10、B = [20, 30, 40]; 然后现在我有一个控制按钮，true时，将A、B都改为 0， false时，变回原本的数据。
+
+- 这种情况解决办法我这里提供两种，
+  - 用两个变量存放
+  - 利用vue的filter过滤器可以轻松解决上述问题。
